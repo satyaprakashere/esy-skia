@@ -64,6 +64,7 @@ SK_C_API int sk_typeface_get_variation_design_position(const sk_typeface_t* type
 SK_C_API int sk_typeface_get_variation_design_parameters(const sk_typeface_t* typeface, sk_fontarguments_variation_axis_t* parameters, int parameterCount);
 SK_C_API sk_typeface_t* sk_typeface_clone_with_arguments(const sk_typeface_t* typeface, const sk_fontarguments_variation_position_coordinate_t* coordinates, int coordinateCount, int collectionIndex, int paletteIndex, const sk_fontarguments_palette_override_t* paletteOverrides, int paletteOverrideCount);
 
+SK_C_API uint32_t sk_typeface_get_unique_id(sk_typeface_t* typeface);
 
 // font manager
 

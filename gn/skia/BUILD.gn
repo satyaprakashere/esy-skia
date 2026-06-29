@@ -685,6 +685,14 @@ config("warnings") {
 
     # We are unlikely to want to fix these.
     cflags += [
+      "-Wno-extra-semi-stmt",
+      "-Wno-anon-enum-enum-conversion",
+      "-Wno-sizeof-array-div",
+      "-Wno-suggest-destructor-override",
+      "-Wno-suggest-override",
+      "-Wno-uninitialized-const-reference",
+      "-Wno-four-char-constants",
+      "-Wno-poison-system-directories",
       "-Wno-covered-switch-default",
       "-Wno-deprecated",
       "-Wno-missing-noreturn",

@@ -1,0 +1,71 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 057b8b0d89..8808059a93 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -22,6 +22,7 @@ declare_args() {
+   skia_use_angle = false
+   skia_use_egl = false
+   skia_use_expat = true
++  esy_skia_enable_svg = false
+   skia_use_fontconfig = is_linux
+   skia_use_freetype = is_android || is_fuchsia || is_linux
+   skia_use_icu = !is_fuchsia && !is_ios && !is_win  # TODO: Windows
+@@ -164,6 +165,10 @@ config("skia_private") {
+     include_dirs += [ "$skia_llvm_path/include" ]
+   }
+ 
++  if (esy_skia_enable_svg) {
++    include_dirs += [ "experimental/svg/model" ]
++  }
++
+   defines = [ "SK_GAMMA_APPLY_TO_A8" ]
+   if (is_android) {
+     defines += [
+@@ -806,6 +811,39 @@ optional("xml") {
+   ]
+ }
+ 
++optional("svg") {
++  enabled = esy_skia_enable_svg
++  public_defines = [ "ESY_SKIA_SVG" ]
++  sources = [
++    "experimental/svg/model/SkSVGAttribute.cpp",
++    "experimental/svg/model/SkSVGAttributeParser.cpp",
++    "experimental/svg/model/SkSVGCircle.cpp",
++    "experimental/svg/model/SkSVGClipPath.cpp",
++    "experimental/svg/model/SkSVGContainer.cpp",
++    "experimental/svg/model/SkSVGDOM.cpp",
++    "experimental/svg/model/SkSVGEllipse.cpp",
++    "experimental/svg/model/SkSVGGradient.cpp",
++    "experimental/svg/model/SkSVGLine.cpp",
++    "experimental/svg/model/SkSVGLinearGradient.cpp",
++    "experimental/svg/model/SkSVGNode.cpp",
++    "experimental/svg/model/SkSVGPath.cpp",
++    "experimental/svg/model/SkSVGPattern.cpp",
++    "experimental/svg/model/SkSVGPoly.cpp",
++    "experimental/svg/model/SkSVGRadialGradient.cpp",
++    "experimental/svg/model/SkSVGRect.cpp",
++    "experimental/svg/model/SkSVGRenderContext.cpp",
++    "experimental/svg/model/SkSVGSVG.cpp",
++    "experimental/svg/model/SkSVGShape.cpp",
++    "experimental/svg/model/SkSVGStop.cpp",
++    "experimental/svg/model/SkSVGTransformableNode.cpp",
++    "experimental/svg/model/SkSVGUse.cpp",
++    "experimental/svg/model/SkSVGValue.cpp",
++  ]
++  deps = [
++    ":xml",
++  ]
++}
++
+ if (skia_enable_gpu && skia_generate_workarounds) {
+   action("workaround_list") {
+     script = "tools/build_workaround_header.py"
+@@ -861,6 +899,7 @@ component("skia") {
+     ":ssse3",
+     ":webp",
+     ":xml",
++    ":svg",
+   ]
+ 
+   # We need the public deps here for Vulkan. Our third_party/vulkan target sets some defines that

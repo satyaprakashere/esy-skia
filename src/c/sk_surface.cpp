@@ -105,6 +105,14 @@ gr_recording_context_t* sk_surface_get_recording_context(sk_surface_t* surface) 
     return ToGrRecordingContext(AsSurface(surface)->recordingContext());
 }
 
+int sk_surface_get_width(sk_surface_t* surface) {
+    return AsSurface(surface)->width();
+}
+
+int sk_surface_get_height(sk_surface_t* surface) {
+    return AsSurface(surface)->height();
+}
+
 // surface props
 
 sk_surfaceprops_t* sk_surfaceprops_new(uint32_t flags, sk_pixelgeometry_t geometry) {

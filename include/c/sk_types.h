@@ -875,6 +875,7 @@ typedef struct {
 } sk_codec_frameinfo_t;
 
 typedef struct sk_svgcanvas_t sk_svgcanvas_t;
+typedef struct sk_svgdom_t sk_svgdom_t;
 
 typedef enum {
     TRIANGLES_SK_VERTICES_VERTEX_MODE,

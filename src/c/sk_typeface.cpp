@@ -167,6 +167,10 @@ sk_typeface_t* sk_typeface_clone_with_arguments(const sk_typeface_t* typeface, c
     return ToTypeface(AsTypeface(typeface)->makeClone(args).release());
 }
 
+uint32_t sk_typeface_get_unique_id(sk_typeface_t* typeface) {
+    return AsTypeface(typeface)->uniqueID();
+}
+
 
 // font manager
 

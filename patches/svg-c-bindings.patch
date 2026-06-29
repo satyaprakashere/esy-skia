@@ -1,0 +1,97 @@
+diff --git a/include/c/sk_svg.h b/include/c/sk_svg.h
+index f0e384423e..23a374877e 100644
+--- a/include/c/sk_svg.h
++++ b/include/c/sk_svg.h
+@@ -16,6 +16,17 @@ SK_C_PLUS_PLUS_BEGIN_GUARD
+ 
+ SK_C_API sk_canvas_t* sk_svgcanvas_create(const sk_rect_t* bounds, sk_xmlwriter_t* writer);
+ 
++#ifdef ESY_SKIA_SVG
++// esy-skia additions
++SK_C_API void sk_svgdom_render(sk_svgdom_t *svgdom, sk_canvas_t *canvas);
++SK_C_API void sk_svgdom_set_container_size(sk_svgdom_t *svgdom, float width, float height);
++SK_C_API float sk_svgdom_get_container_width(sk_svgdom_t *svgdom);
++SK_C_API float sk_svgdom_get_container_height(sk_svgdom_t *svgdom);
++SK_C_API sk_svgdom_t *sk_svgdom_create_from_stream(sk_stream_t *stream);
++SK_C_API void sk_svgdom_ref(const sk_svgdom_t *svg);
++SK_C_API void sk_svgdom_unref(const sk_svgdom_t *svg);
++#endif
++
+ SK_C_PLUS_PLUS_END_GUARD
+ 
+ #endif
+diff --git a/include/c/sk_types.h b/include/c/sk_types.h
+index fa24d1ce0d..4cfeda87ed 100644
+--- a/include/c/sk_types.h
++++ b/include/c/sk_types.h
+@@ -813,6 +813,7 @@ typedef struct sk_xmlstreamwriter_t sk_xmlstreamwriter_t;
+ typedef struct sk_xmlwriter_t sk_xmlwriter_t;
+ 
+ typedef struct sk_svgcanvas_t sk_svgcanvas_t;
++typedef struct sk_svgdom_t sk_svgdom_t;
+ 
+ typedef struct sk_3dview_t sk_3dview_t;
+ 
+diff --git a/src/c/sk_svg.cpp b/src/c/sk_svg.cpp
+index 01799b8799..c31d5d4fc8 100644
+--- a/src/c/sk_svg.cpp
++++ b/src/c/sk_svg.cpp
+@@ -9,6 +9,11 @@
+ 
+ #include "SkSVGCanvas.h"
+ 
++#ifdef ESY_SKIA_SVG
++#include "SkSVGDOM.h"
++#include "SkSVGNode.h"
++#endif
++
+ #include "sk_svg.h"
+ 
+ #include "sk_types_priv.h"
+@@ -18,3 +23,33 @@
+ sk_canvas_t* sk_svgcanvas_create(const sk_rect_t* bounds, sk_xmlwriter_t* writer) {
+     return ToCanvas(SkSVGCanvas::Make(*AsRect(bounds), AsXMLWriter(writer)).release());
+ }
++
++#ifdef ESY_SKIA_SVG
++void sk_svgdom_render(sk_svgdom_t *svgdom, sk_canvas_t *canvas) {
++    AsSVGDOM(svgdom)->render(AsCanvas(canvas));
++}
++
++void sk_svgdom_set_container_size(sk_svgdom_t *svgdom, float width, float height) {
++    AsSVGDOM(svgdom)->setContainerSize(SkSize::Make(width, height));
++}
++
++float sk_svgdom_get_container_width(sk_svgdom_t *svgdom) {
++    return AsSVGDOM(svgdom)->containerSize().width();
++}
++
++float sk_svgdom_get_container_height(sk_svgdom_t *svgdom) {
++    return AsSVGDOM(svgdom)->containerSize().height();
++}
++
++sk_svgdom_t *sk_svgdom_create_from_stream(sk_stream_t *stream) {
++    return ToSVGDOM(SkSVGDOM::MakeFromStream(*AsStream(stream)).release());
++}
++
++void sk_svgdom_ref(const sk_svgdom_t *svg) {
++    SkSafeRef(AsSVGDOM(svg));
++}
++
++void sk_svgdom_unref(const sk_svgdom_t *svg) {
++    SkSafeUnref(AsSVGDOM(svg));
++}
++#endif
+diff --git a/src/c/sk_types_priv.h b/src/c/sk_types_priv.h
+index f2b8d6a1ea..bc9b580a7e 100644
+--- a/src/c/sk_types_priv.h
++++ b/src/c/sk_types_priv.h
+@@ -110,6 +110,8 @@ DEF_CLASS_MAP(GrContext, gr_context_t, GrContext)
+ DEF_CLASS_MAP(GrBackendTexture, gr_backendtexture_t, GrBackendTexture)
+ DEF_CLASS_MAP(GrBackendRenderTarget, gr_backendrendertarget_t, GrBackendRenderTarget)
+ 
++DEF_CLASS_MAP(SkSVGDOM, sk_svgdom_t, SVGDOM)
++
+ DEF_STRUCT_MAP(SkColorSpacePrimaries, sk_colorspaceprimaries_t, ColorSpacePrimaries)
+ DEF_STRUCT_MAP(SkColorSpaceTransferFn, sk_colorspace_transfer_fn_t, ColorSpaceTransferFn)
+ DEF_STRUCT_MAP(SkHighContrastConfig, sk_highcontrastconfig_t, HighContrastConfig)

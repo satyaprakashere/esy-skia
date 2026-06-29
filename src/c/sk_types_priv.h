@@ -169,6 +169,7 @@ DEF_STRUCT_MAP(skcms_ICCProfile, sk_colorspace_icc_profile_t, ColorSpaceIccProfi
 DEF_STRUCT_MAP(SkColorSpacePrimaries, sk_colorspace_primaries_t, ColorSpacePrimaries)
 DEF_STRUCT_MAP(skcms_TransferFunction, sk_colorspace_transfer_fn_t, ColorSpaceTransferFn)
 DEF_STRUCT_MAP(skcms_Matrix3x3, sk_colorspace_xyz_t, ColorSpaceXyz)
+DEF_CLASS_MAP(SkSVGDOM, sk_svgdom_t, SVGDOM)
 DEF_STRUCT_MAP(SkHighContrastConfig, sk_highcontrastconfig_t, HighContrastConfig)
 DEF_STRUCT_MAP(SkIPoint, sk_ipoint_t, IPoint)
 DEF_STRUCT_MAP(SkIRect, sk_irect_t, IRect)

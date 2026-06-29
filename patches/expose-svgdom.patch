@@ -1,0 +1,13 @@
+diff --git a/experimental/svg/model/SkSVGDOM.h b/experimental/svg/model/SkSVGDOM.h
+index 8904c1799d..117d15ec33 100644
+--- a/experimental/svg/model/SkSVGDOM.h
++++ b/experimental/svg/model/SkSVGDOM.h
+@@ -18,7 +18,7 @@ class SkDOM;
+ class SkStream;
+ class SkSVGNode;
+ 
+-class SkSVGDOM : public SkRefCnt {
++class SK_API SkSVGDOM : public SkRefCnt {
+ public:
+     SkSVGDOM();
+     ~SkSVGDOM() = default;
