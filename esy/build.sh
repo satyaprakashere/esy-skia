@@ -28,7 +28,7 @@ then
         $PYTHON_BINARY tools/git-sync-deps
         ln -s third_party/externals/gyp tools/gyp
         WINDOWS_PYTHON_PATH="$(cygpath -w $(which $PYTHON_BINARY))"
-        bin/gn gen $cur__target_dir/out/Shared --script-executable="$WINDOWS_PYTHON_PATH" --args='is_debug=false is_component_build=true esy_skia_enable_svg=true skia_use_partition_alloc=false skia_use_icu=false' || exit -1
+        bin/gn gen $cur__target_dir/out/Shared --script-executable="$WINDOWS_PYTHON_PATH" --args='is_debug=false is_component_build=true esy_skia_enable_svg=true skia_use_partition_alloc=false skia_use_icu=false skia_use_perfetto=false' || exit -1
         ninja.exe -C $cur__target_dir/out/Shared
         mv $cur__target_dir/out/Shared/libskia.dll $cur__target_dir/out/Shared/skia.dll
     else
@@ -56,6 +56,6 @@ else
         echo "llvm toolset-7.0 does not need to be manually activated"
     fi
 
-    bin/gn gen $cur__target_dir/out/Static --script-executable="$PYTHON_BINARY" "--args=cc=\"$CC\" cxx=\"$CXX\" skia_use_system_libjpeg_turbo=true esy_skia_enable_svg=true is_debug=false skia_use_partition_alloc=false skia_use_icu=false extra_cflags=[\"-I${ESY_LIBJPEG_TURBO_PREFIX}/include\"] extra_ldflags=[\"-L${ESY_LIBJPEG_TURBO_PREFIX}/lib\", \"-ljpeg\" ]" || exit -1
+    bin/gn gen $cur__target_dir/out/Static --script-executable="$PYTHON_BINARY" "--args=cc=\"$CC\" cxx=\"$CXX\" skia_use_system_libjpeg_turbo=true esy_skia_enable_svg=true is_debug=false skia_use_partition_alloc=false skia_use_icu=false skia_use_perfetto=false extra_cflags=[\"-I${ESY_LIBJPEG_TURBO_PREFIX}/include\"] extra_ldflags=[\"-L${ESY_LIBJPEG_TURBO_PREFIX}/lib\", \"-ljpeg\" ]" || exit -1
     ninja.exe -C $cur__target_dir/out/Static || exit -1
 fi
