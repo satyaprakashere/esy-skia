@@ -3,14 +3,20 @@
 OS=$1
 ESY_LIBJPEG_TURBO_PREFIX=$2
 
-if [[ "$(python -V 2>&1)" =~ "Python 2" ]]
+if [[ "$(python3 -V 2>&1)" =~ "Python 3" ]]
+then
+    PYTHON_BINARY="python3"
+elif [[ "$(python -V 2>&1)" =~ "Python 3" ]]
+then
+    PYTHON_BINARY="python"
+elif [[ "$(python -V 2>&1)" =~ "Python 2" ]]
 then
     PYTHON_BINARY="python"
 elif [[ "$(python2 -V 2>&1)" =~ "Python 2" ]]
 then
     PYTHON_BINARY="python2"
 else
-    echo "esy-skia requires Python 2 to be available either as python or as python2 to be built. Please install Python 2 and make it available in your PATH."
+    echo "esy-skia requires Python to be available in your PATH."
     exit -1
 fi
 
