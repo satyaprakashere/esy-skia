@@ -11,5 +11,27 @@
 *.tgz      binary
 *.zip      binary
 
+# Images
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.webp     binary
+*.ico      binary
+*.avif     binary
+
+# Skia binary formats
+*.mskp     binary
+*.skp      binary
+
+# Fonts
+*.ttf      binary
+*.otf      binary
+*.woff     binary
+*.ttc      binary
+
+# Graphics textures
+*.ktx      binary
+
 # Text files where line endings should be preserved
 *.patch    -text
