@@ -56,6 +56,12 @@ else
         echo "llvm toolset-7.0 does not need to be manually activated"
     fi
 
-    bin/gn gen $cur__target_dir/out/Static --script-executable="$PYTHON_BINARY" "--args=cc=\"$CC\" cxx=\"$CXX\" skia_use_system_libjpeg_turbo=true esy_skia_enable_svg=true is_debug=false skia_use_partition_alloc=false skia_use_icu=false skia_use_perfetto=false extra_cflags=[\"-I${ESY_LIBJPEG_TURBO_PREFIX}/include\"] extra_ldflags=[\"-L${ESY_LIBJPEG_TURBO_PREFIX}/lib\", \"-ljpeg\" ]" || exit -1
-    ninja.exe -C $cur__target_dir/out/Static skia || exit -1
+    if [ -n "$ESY_SKIA_PREBUILT" ] && [ -f "$ESY_SKIA_PREBUILT" ]; then
+        echo "esy-skia: Using prebuilt libskia.a at $ESY_SKIA_PREBUILT, skipping compilation."
+        mkdir -p "$cur__target_dir/out/Static"
+        cp "$ESY_SKIA_PREBUILT" "$cur__target_dir/out/Static/libskia.a"
+    else
+        bin/gn gen $cur__target_dir/out/Static --script-executable="$PYTHON_BINARY" "--args=cc=\"$CC\" cxx=\"$CXX\" skia_use_system_libjpeg_turbo=true esy_skia_enable_svg=true is_debug=false skia_use_partition_alloc=false skia_use_icu=false skia_use_perfetto=false extra_cflags=[\"-I${ESY_LIBJPEG_TURBO_PREFIX}/include\"] extra_ldflags=[\"-L${ESY_LIBJPEG_TURBO_PREFIX}/lib\", \"-ljpeg\" ]" || exit -1
+        ninja.exe -C $cur__target_dir/out/Static skia || exit -1
+    fi
 fi

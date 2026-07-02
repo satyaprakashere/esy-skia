@@ -17,7 +17,8 @@
   "homepage": "https://skia.org",
   "esy": {
     "buildEnv": {
-      "PATH": "#{self.target_dir : $PATH}"
+      "PATH": "#{self.target_dir : $PATH}",
+      "ESY_SKIA_PREBUILT": "#{self.root}/prebuilt/darwin/libskia.a"
     },
     "buildsInSource": true,
     "build": [
