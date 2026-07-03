@@ -6,8 +6,15 @@ OS=$1
 mkdir -p $cur__install/include
 cp -a $cur__root/include/. $cur__install/include/
 
-mkdir -p $cur__install/include/svg/model
-cp $cur__root/experimental/svg/model/*.h $cur__install/include/svg/model/
+# Copy skcms module headers
+mkdir -p $cur__install/include/modules/skcms/src
+cp $cur__root/modules/skcms/skcms.h $cur__install/include/modules/skcms/
+cp $cur__root/modules/skcms/src/*.h $cur__install/include/modules/skcms/src/
+
+if [ -d "$cur__root/experimental/svg/model" ]; then
+    mkdir -p $cur__install/include/svg/model
+    cp $cur__root/experimental/svg/model/*.h $cur__install/include/svg/model/
+fi
 
 if [[ $OS == 'windows' ]]
 then
@@ -38,7 +45,7 @@ includedir=$cur__install/include
 Name: skia
 Description: 2D graphics library
 Version: $cur__version
-Cflags: -I$cur__install -I\${includedir}/android -I\${includedir}/atlastext -I\${includedir}/c -I\${includedir}/codec -I\${includedir}/config -I\${includedir}/core -I\${includedir}/docs -I\${includedir}/effects -I\${includedir}/encode -I\${includedir}/gpu -I\${includedir}/pathops -I\${includedir}/ports -I\${includedir}/private -I\${includedir}/svg -I\${includedir}/third_party -I\${includedir}/utils $extraCFlags
+Cflags: -I$cur__install -I\${includedir} -I\${includedir}/android -I\${includedir}/atlastext -I\${includedir}/c -I\${includedir}/codec -I\${includedir}/config -I\${includedir}/core -I\${includedir}/docs -I\${includedir}/effects -I\${includedir}/encode -I\${includedir}/gpu -I\${includedir}/pathops -I\${includedir}/ports -I\${includedir}/private -I\${includedir}/svg -I\${includedir}/third_party -I\${includedir}/utils $extraCFlags
 Libs: -L$cur__lib $platformSpecificFlags -lskia -lstdc++
 EOF
 

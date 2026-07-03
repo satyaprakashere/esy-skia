@@ -77,3 +77,5 @@ bazel/user/buildrc
 
 # esy build directories
 _esy
+_build/
+prebuilt

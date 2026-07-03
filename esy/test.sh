@@ -1,6 +1,7 @@
 
 ROOTDIR=$(pwd)
-BUILDDIR=$cur__target_dir
+BUILDDIR=${cur__target_dir:-$ROOTDIR/_build}
+mkdir -p "$BUILDDIR"
 INCLUDEDIR=$ROOTDIR/include
 
 if which x86_64-w64-mingw32-gcc; then
@@ -31,6 +32,7 @@ export PATH=$PATH:$BUILDDIR
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BUILDDIR
 
 $CC \
+-std=c++17 \
 $ROOTDIR/esy/test.cpp \
 -o test.exe \
 `pkg-config --cflags --libs skia` \

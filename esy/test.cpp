@@ -1,9 +1,11 @@
-#include "SkSurface.h"
-#include "SkPath.h"
-#include "SkCanvas.h"
-#include "SkData.h"
-#include "SkImage.h"
-#include "SkStream.h"
+#include "include/core/SkSurface.h"
+#include "include/core/SkPath.h"
+#include "include/core/SkPathBuilder.h"
+#include "include/core/SkCanvas.h"
+#include "include/core/SkData.h"
+#include "include/core/SkImage.h"
+#include "include/core/SkStream.h"
+#include "include/encode/SkPngEncoder.h"
 
 int main (int argc, char * const argv[]) {
   const char * filePath = argv[1];
@@ -11,17 +13,18 @@ int main (int argc, char * const argv[]) {
   int height = 256;
 
   // create canvas to draw on
-  sk_sp<SkSurface> rasterSurface = SkSurface::MakeRasterN32Premul(width, height);
+  sk_sp<SkSurface> rasterSurface = SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width, height));
   SkCanvas* canvas = rasterSurface->getCanvas();
 
   // creating a path to be drawn
-  SkPath path;
-  path.moveTo(10.0f, 10.0f);
-  path.lineTo(100.0f, 0.0f);
-  path.lineTo(100.0f, 100.0f);
-  path.lineTo(0.0f, 100.0f);
-  path.lineTo(50.0f, 50.0f);
-  path.close();
+  SkPathBuilder builder;
+  builder.moveTo(10.0f, 10.0f);
+  builder.lineTo(100.0f, 0.0f);
+  builder.lineTo(100.0f, 100.0f);
+  builder.lineTo(0.0f, 100.0f);
+  builder.lineTo(50.0f, 50.0f);
+  builder.close();
+  SkPath path = builder.detach();
 
   // creating a paint to draw with
   SkPaint p;
@@ -34,7 +37,7 @@ int main (int argc, char * const argv[]) {
   // make a PNG encoded image using the canvas
   sk_sp<SkImage> img(rasterSurface->makeImageSnapshot());
   if (!img) { return 1; }
-  sk_sp<SkData> png(img->encodeToData());
+  sk_sp<SkData> png(SkPngEncoder::Encode(nullptr, img.get(), {}));
   if (!png) { return 1; }
 
   // write the data to the file specified by filePath
