@@ -29,18 +29,37 @@ fi
 
 # Check if cache exists and we are not forcing a rebuild
 if [ -z "$ESY_SKIA_REBUILD" ] && [ -z "$ESY_SKIA_SCRATCH" ]; then
-    if [ "$OS" = "windows" ] && [ -f "$CACHE_DIR/skia.dll" ] && [ -f "$CACHE_DIR/libskia.a" ]; then
-        echo "esy-skia: Using cached build from $CACHE_DIR"
-        mkdir -p "$cur__target_dir/out/Shared"
-        cp "$CACHE_DIR/skia.dll" "$cur__target_dir/out/Shared/skia.dll"
-        cp "$CACHE_DIR/skia.def" "$cur__target_dir/out/Shared/skia.def"
-        cp "$CACHE_DIR/libskia.a" "$cur__target_dir/out/Shared/libskia.a"
-        exit 0
-    elif [ "$OS" != "windows" ] && [ -f "$CACHE_DIR/libskia.a" ]; then
-        echo "esy-skia: Using cached build from $CACHE_DIR"
-        mkdir -p "$cur__target_dir/out/Static"
-        cp "$CACHE_DIR/libskia.a" "$cur__target_dir/out/Static/libskia.a"
-        exit 0
+    FOUND_CACHE=""
+    if [ "$OS" = "windows" ]; then
+        # Check candidate locations on Windows
+        for dir in "$CACHE_DIR" "/tmp/esy-skia-build-cache/$OS" "/tmp/esy-skia" "/tmp"; do
+            if [ -f "$dir/skia.dll" ] && [ -f "$dir/libskia.a" ]; then
+                echo "esy-skia: Using cached build from $dir"
+                mkdir -p "$cur__target_dir/out/Shared"
+                cp "$dir/skia.dll" "$cur__target_dir/out/Shared/skia.dll"
+                cp "$dir/skia.def" "$cur__target_dir/out/Shared/skia.def" 2>/dev/null || true
+                cp "$dir/libskia.a" "$cur__target_dir/out/Shared/libskia.a"
+                FOUND_CACHE="true"
+                break
+            fi
+        done
+        if [ "$FOUND_CACHE" = "true" ]; then
+            exit 0
+        fi
+    else
+        # Check candidate locations on Darwin / Linux
+        for dir in "$CACHE_DIR" "/tmp/esy-skia-build-cache/$OS" "/tmp/esy-skia" "/tmp"; do
+            if [ -f "$dir/libskia.a" ]; then
+                echo "esy-skia: Using cached build from $dir"
+                mkdir -p "$cur__target_dir/out/Static"
+                cp "$dir/libskia.a" "$cur__target_dir/out/Static/libskia.a"
+                FOUND_CACHE="true"
+                break
+            fi
+        done
+        if [ "$FOUND_CACHE" = "true" ]; then
+            exit 0
+        fi
     fi
 fi
 
